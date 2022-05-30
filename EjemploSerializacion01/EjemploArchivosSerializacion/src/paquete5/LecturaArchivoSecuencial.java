@@ -1,95 +1,29 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package paquete4;
+package paquete5;
 
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-
 import java.util.ArrayList;
 
-public class LecturaArchivoSecuencial {
 
+/**
+ *
+ * @author SALA I
+ */
+public class LecturaArchivoSecuencial {
     private ObjectInputStream entrada;
-    private ArrayList<Profesor> profesores;
+    private ArrayList<Hospital> hospital;
     private String nombreArchivo;
     private String identificador;
-    private Profesor profesorBuscado;
-
-    public LecturaArchivoSecuencial(String n) {
-        nombreArchivo = n;
-        File f = new File(obtenerNombreArchivo());
-        if (f.exists()) {
-            try // abre el archivo
-            {
-                entrada = new ObjectInputStream(
-                        new FileInputStream(n));
-            } // fin de try
-            catch (IOException ioException) {
-                System.err.println("Error al abrir el archivo." + ioException);
-            } // fin de catch
-        }
-    }
-
-    public void establecerNombreArchivo(String n) {
-        nombreArchivo = n;
-    }
+    private Hospital hospitalBuscado;
     
-    public void establecerProfesores() {
-        // 
-        profesores = new ArrayList<>();
-        File f = new File(obtenerNombreArchivo());
-        if (f.exists()) {
-
-            while (true) {
-                try {
-                    Profesor registro = (Profesor) entrada.readObject();
-                    profesores.add(registro);
-                } catch (EOFException endOfFileException) {
-                    return; // se llegó al fin del archivo
-                    // se puede usar el break;
-                    // System.err.println("Fin de archivo: " + endOfFileException);
-
-                } catch (IOException ex) {
-                    System.err.println("Error al leer el archivo: " + ex);
-                } catch (ClassNotFoundException ex) {
-                    System.err.println("No se pudo crear el objeto: " + ex);
-                } catch (Exception ex) {
-                    System.err.println("No hay datos en el archivo: " + ex);
-
-                }
-            }
-        }
-    }
-
-    public void establecerIdentificador(String n) {
-        identificador = n;
-    }
-    
-   
-    
-    public ArrayList<Profesor> obtenerProfesores() {
-        return profesores;
-    }
-
-    public String obtenerNombreArchivo() {
-        return nombreArchivo;
-    }
-    
-    public String obtenerIdentificador() {
-        return identificador;
-    }
-        
-    public Profesor obtenerProfesorBuscado() {
-        return profesorBuscado;
-    }
-    
-     public void establecerProfesorBuscado() {
+    public void establecerProfesorBuscado() {
         // 
         
         File f = new File(obtenerNombreArchivo());
@@ -97,10 +31,10 @@ public class LecturaArchivoSecuencial {
 
             while (true) {
                 try {
-                    Profesor registro = (Profesor) entrada.readObject();
+                    Hospital registro = (Hospital) entrada.readObject();
                     
-                    if(registro.obtenerCedula().equals(identificador)){
-                        profesorBuscado = registro;
+                    if(registro.obtenerNombre().equals(identificador)){
+                        hospitalBuscado = registro;
                         break;
                     }
                     
@@ -121,16 +55,79 @@ public class LecturaArchivoSecuencial {
         }
     }
 
+    public LecturaArchivoSecuencial(String n) {
+        nombreArchivo = n;
+        File f = new File(nombreArchivo);
+        if (f.exists()) {
+            try // abre el archivo
+            {
+                entrada = new ObjectInputStream(
+                        new FileInputStream(n));
+            } // fin de try
+            catch (IOException ioException) {
+                System.err.println("Error al abrir el archivo." + ioException);
+            } // fin de catch
+        }
+    }
+
+    public void establecerNombreArchivo(String n) {
+        nombreArchivo = n;
+    }
+    public void establecerIdentificador(String n) {
+        identificador = n;
+    }
+
+    public void establecerHospital() {
+        // 
+        hospital = new ArrayList<>();
+        File f = new File(obtenerNombreArchivo());
+        if (f.exists()) {
+
+            while (true) {
+                try {
+                    Hospital registro = (Hospital) entrada.readObject();
+                    hospital.add(registro);
+                } catch (EOFException endOfFileException) {
+                    return; // se llegó al fin del archivo
+                    // se puede usar el break;
+                    // System.err.println("Fin de archivo: " + endOfFileException);
+
+                } catch (IOException ex) {
+                    System.err.println("Error al leer el archivo: " + ex);
+                } catch (ClassNotFoundException ex) {
+                    System.err.println("No se pudo crear el objeto: " + ex);
+                } catch (Exception ex) {
+                    System.err.println("No hay datos en el archivo: " + ex);
+
+                }
+            }
+        }
+    }
+
+    public ArrayList<Hospital> obtenerHospital() {
+        return hospital;
+    }
+
+    public String obtenerNombreArchivo() {
+        return nombreArchivo;
+    }
+    public String obtenerIdentificador() {
+        return identificador;
+    }
+    
+    public Hospital obtenerHospitalBuscado() {
+        return hospitalBuscado;
+    }
+
     @Override
     public String toString() {
-        String cadena = "Lista de Profesores\n";
-        for (int i = 0; i < obtenerProfesores().size(); i++) {
-            Profesor p = obtenerProfesores().get(i);
-            cadena = String.format("%s(%d) %s-%s-%s\n", cadena,
-                    i + 1,
+        String cadena = "Lista de Hospitales\n";
+        for (int i = 0; i < obtenerHospital().size(); i++) {
+            Hospital p = obtenerHospital().get(i);
+            cadena = String.format("%s %s - %d - %.2f\n", cadena,                   
                     p.obtenerNombre(),
-                    p.obtenerTipo(),
-                    p.obtenerCedula());
+                    p.obtenerNumeroCamas(),
+                    p.obtenerPresupuesto());
         }
 
         return cadena;
